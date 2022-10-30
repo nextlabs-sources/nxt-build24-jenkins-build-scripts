@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>Task to check and list BODA dirs under \\nextlabs.com\share\data\build that have more than 15 versions in them</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <jenkins.model.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>-1</daysToKeep>
+        <numToKeep>20</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </jenkins.model.BuildDiscarderProperty>
+    <hudson.plugins.disk__usage.DiskUsageProperty plugin="disk-usage@0.28"/>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>true</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <jdk>(System)</jdk>
+  <triggers>
+    <hudson.triggers.TimerTrigger>
+      <spec>H 7 * * *</spec>
+    </hudson.triggers.TimerTrigger>
+  </triggers>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>set +x
+
+[ `net use | grep -ic Z:` -ne 0 ] &amp;&amp; net use Z: /d
+
+net use Z: &apos;\\nextlabs.com\share\data&apos;
+
+# Checking in PCV directory
+echo &quot;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~&quot;
+echo &quot;Searching in &apos;\\\\nextlabs.com\share\data\build\pcv&apos; directory&quot;
+echo &quot;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~&quot;
+cd Z:/build/pcv
+for component in Teamcenter/RightsManagementExtension/*/* artifacts/Teamcenter/RightsManagementExtension/*/*
+do
+	numdirs=`ls &quot;${component}&quot; | wc -l`
+	if [ ${numdirs} -ge 15 ]; then
+		dirsiz=`du -sh ${component} | awk &apos;{print $1}&apos;`
+		echo &quot;INFO: Found //nextlabs.com/share/data/build/pcv/${component} : ${numdirs} : ${dirsiz}&quot; | sed &apos;s@/@\\@g&apos;
+	fi
+done
+for component in artifacts/*/* [b-zA-Z]*/*
+do
+	[ `echo &quot;${component}&quot; | grep -c symbols` -ne 0 ] &amp;&amp; continue # I have no idea what symbols directory is needed for
+	[ `echo &quot;${component}&quot; | grep -ic sap` -ne 0 ] &amp;&amp; continue # SAP stuff - no idea whether this needs to be pruned - let&apos;s leave it alone
+	[ `echo &quot;${component}&quot; | grep -c Teamcenter` -ne 0 ] &amp;&amp; continue # TeamCenter directories - we already handled above
+	numdirs=`ls &quot;${component}&quot; | wc -l`
+	if [ ${numdirs} -ge 15 ]; then
+		dirsiz=`du -sh ${component} | awk &apos;{print $1}&apos;`
+		echo &quot;INFO: Found //nextlabs.com/share/data/build/pcv/${component} : ${numdirs} : ${dirsiz}&quot; | sed &apos;s@/@\\@g&apos;
+	fi
+done
+echo &quot;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~&quot;
+
+echo
+echo
+echo
+
+# Checking in release_candidate directory
+echo &quot;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~&quot;
+echo &quot;Searching in &apos;\\\\nextlabs.com\share\data\build\release_candidate&apos; directory&quot;
+echo &quot;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~&quot;
+cd Z:/build/release_candidate
+for component in Teamcenter/RightsManagementExtension/*/* artifacts/Teamcenter/RightsManagementExtension/*/*
+do
+	numdirs=`ls &quot;${component}&quot; | wc -l`
+	if [ ${numdirs} -ge 15 ]; then
+		dirsiz=`du -sh ${component} | awk &apos;{print $1}&apos;`
+		echo &quot;INFO: Found //nextlabs.com/share/data/build/pcv/${component} : ${numdirs} : ${dirsiz}&quot; | sed &apos;s@/@\\@g&apos;
+	fi
+done
+for component in artifacts/*/* [b-zA-Z]*/*
+do
+	[ `echo &quot;${component}&quot; | grep -ic sap` -ne 0 ] &amp;&amp; continue # SAP stuff - no idea whether this needs to be pruned - let&apos;s leave it alone
+	[ `echo &quot;${component}&quot; | grep -c Teamcenter` -ne 0 ] &amp;&amp; continue # TeamCenter directories - we already handled above
+	numdirs=`ls &quot;${component}&quot; | wc -l`
+	if [ ${numdirs} -ge 15 ]; then
+		dirsiz=`du -sh ${component} | awk &apos;{print $1}&apos;`
+		echo &quot;INFO: Found //nextlabs.com/share/data/build/release_candidate/${component} : ${numdirs} : ${dirsiz}&quot; | sed &apos;s@/@\\@g&apos;
+	fi
+done
+echo &quot;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~&quot;
+echo
+
+cd ${WORKSPACE}/
+net use Z: /d 2&gt;/dev/null
+
+## EOF ##
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.plugins.emailext.ExtendedEmailPublisher plugin="email-ext@2.59">
+      <recipientList>lakshmi.krishnan@nextlabs.com</recipientList>
+      <configuredTriggers>
+        <hudson.plugins.emailext.plugins.trigger.AlwaysTrigger>
+          <email>
+            <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+            <body>$PROJECT_DEFAULT_CONTENT</body>
+            <recipientProviders>
+              <hudson.plugins.emailext.plugins.recipients.ListRecipientProvider/>
+            </recipientProviders>
+            <attachmentsPattern></attachmentsPattern>
+            <attachBuildLog>false</attachBuildLog>
+            <compressBuildLog>false</compressBuildLog>
+            <replyTo>$PROJECT_DEFAULT_REPLYTO</replyTo>
+            <contentType>project</contentType>
+          </email>
+        </hudson.plugins.emailext.plugins.trigger.AlwaysTrigger>
+      </configuredTriggers>
+      <contentType>text/plain</contentType>
+      <defaultSubject>$DEFAULT_SUBJECT</defaultSubject>
+      <defaultContent>${BUILD_URL}
+
+================== BUILD LOG FOLLOWS ==================
+${BUILD_LOG}</defaultContent>
+      <attachmentsPattern></attachmentsPattern>
+      <presendScript>$DEFAULT_PRESEND_SCRIPT</presendScript>
+      <postsendScript></postsendScript>
+      <attachBuildLog>false</attachBuildLog>
+      <compressBuildLog>false</compressBuildLog>
+      <replyTo>$DEFAULT_REPLYTO</replyTo>
+      <saveOutput>false</saveOutput>
+      <disabled>false</disabled>
+    </hudson.plugins.emailext.ExtendedEmailPublisher>
+  </publishers>
+  <buildWrappers/>
+</project>

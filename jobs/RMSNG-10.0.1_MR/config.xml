@@ -1,0 +1,228 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>Runs validateall and buildall on RMSNG source&#xd;
+&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;branch: origin/RMS_10.0.1_MR</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.security.AuthorizationMatrixProperty/>
+    <jenkins.model.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>-1</daysToKeep>
+        <numToKeep>30</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </jenkins.model.BuildDiscarderProperty>
+    <hudson.plugins.disk__usage.DiskUsageProperty plugin="disk-usage@0.28"/>
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@3.3.0">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>git@bitbucket.org:nxtlbs-devops/rmsng.git</url>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>origin/RMS_10.0.1_MR</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions>
+      <hudson.plugins.git.extensions.impl.CleanBeforeCheckout/>
+      <hudson.plugins.git.extensions.impl.PruneStaleBranch/>
+    </extensions>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>true</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <jdk>(System)</jdk>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>set +x
+export NLEXTERNALDIR=C:/P4/external/
+export NLEXTERNALDIR2=C:/P4/main_external/
+export JAVA_HOME=${NLEXTERNALDIR2}/j2sdk/jdk1.7.0_75
+export ANT_HOME=${NLEXTERNALDIR2}/apache-ant/apache-ant-1.9.4
+export ANT=$ANT_HOME/bin/ant
+
+export LIB_HOME=C:/Jenkins/jobs/RMSNG-binaries-10.0.1_MR/workspace
+export FINDBUGS_HOME=C:/findbugs-3.0.1
+
+echo
+echo &quot;################################################################################&quot;
+echo &quot;INFO: Git info about current state of LIB_HOME&quot;
+echo &quot;INFO: LIB_HOME is ${LIB_HOME}&quot;
+cd ${LIB_HOME}/
+git show --quiet HEAD
+echo &quot;################################################################################&quot;
+echo
+
+cd ${WORKSPACE}
+${ANT} validateall</command>
+      <unstableReturn>2</unstableReturn>
+    </hudson.tasks.Shell>
+    <hudson.tasks.Shell>
+      <command>set +x
+
+export NLEXTERNALDIR=C:/P4/external/
+export NLEXTERNALDIR2=C:/P4/main_external/
+export JAVA_HOME=${NLEXTERNALDIR2}/j2sdk/jdk1.7.0_75
+export ANT_HOME=${NLEXTERNALDIR2}/apache-ant/apache-ant-1.9.4
+export ANT=$ANT_HOME/bin/ant
+
+export LIB_HOME=C:/Jenkins/jobs/RMSNG-binaries-10.0.1_MR/workspace
+export FINDBUGS_HOME=C:/findbugs-3.0.1
+
+echo
+echo &quot;################################################################################&quot;
+echo &quot;INFO: Git info about current state of LIB_HOME&quot;
+echo &quot;INFO: LIB_HOME is ${LIB_HOME}&quot;
+cd ${LIB_HOME}/
+git show --quiet HEAD
+echo &quot;################################################################################&quot;
+echo
+
+BUILD_MANIFEST_FILE=${WORKSPACE}/build.manifest
+
+VERSION_RMS_STR=$(cat ${WORKSPACE}/version)
+VERSION_RMS_STR_MAJOR=$(echo ${VERSION_RMS_STR} | cut -d. -f1)
+VERSION_RMS_STR_MINOR=$(echo ${VERSION_RMS_STR} | cut -d. -f2)
+BUILD_DATE_LONG=$(date +&quot;%Y%m%d%H%M&quot;)
+
+export RMSNG_BUILD_NUMBER=$(printf %04d ${BUILD_NUMBER})
+echo &quot;INFO: RMSNG_BUILD_NUMBER: ${RMSNG_BUILD_NUMBER}&quot;
+export RMSNG_PACKAGE_NAME=RMS-${VERSION_RMS_STR}-${RMSNG_BUILD_NUMBER}-${BUILD_DATE_LONG}.zip
+
+cd ${WORKSPACE}/
+${ANT} -DVERSION_RMS_STR_MAJOR=${VERSION_RMS_STR_MAJOR} \
+       -DVERSION_RMS_STR_MINOR=${VERSION_RMS_STR_MINOR} \
+       -DRMSNG_BUILD_NUMBER=${RMSNG_BUILD_NUMBER} \
+       buildall
+
+# Now create a zip of the war files we need
+mkdir -p ${WORKSPACE}/buildoutput
+zip -j ${WORKSPACE}/buildoutput/${RMSNG_PACKAGE_NAME} router/server/build/router.war rms/server/build/rms.war viewer/build/viewer.war
+
+################################################################################
+############################# PUBLISH TO BODA PART #############################
+################################################################################
+# Push the zip to BODA
+VERSION_BUILD_SHORT=${BUILD_NUMBER}
+REPOSITORY_ROOT=S:/build/release_candidate
+PUBLISH_BODA_SC_DIR=${REPOSITORY_ROOT}/SecureCollaboration/${VERSION_RMS_STR}/${VERSION_BUILD_SHORT}
+PUBLISH_BODA_SC_ARTIFACT_DIR=${REPOSITORY_ROOT}/artifacts/SecureCollaboration/${VERSION_RMS_STR}/${VERSION_BUILD_SHORT}
+LOG_FILE=${WORKSPACE}/buildRelease.log
+
+export PUBLISH_TO_BODA=1
+
+# Map S: to BODA
+[ `net use | grep -ic S:` -ne 0 ] &amp;&amp; net use S: /d
+[ `subst | grep -ic S:` -ne 0 ] &amp;&amp; subst S: /d
+net use s: &quot;\\\\nextlabs.com\\share\\data&quot;
+echo &quot;Drive Mapping After:&quot;
+set -x
+subst
+net use
+set +x
+
+# Create BODA dirs that must be present
+mkdir -p ${PUBLISH_BODA_SC_DIR}
+mkdir -p ${PUBLISH_BODA_SC_ARTIFACT_DIR}
+
+(
+# Extract Git and Jenkins info from Workspace (works only if running on Jenkins)
+if [ -f ${WORKSPACE}/../config.xml ]; then
+	${WORKSPACE}/scripts/getGitWorkspaceInfo.pl ${WORKSPACE}/../config.xml
+fi
+
+# Publish to BODA only if PUBLISH_TO_BODA environment variable is set (set in Jenkins build process)
+if [ &quot;X${PUBLISH_TO_BODA}&quot; = &quot;XYes&quot; -o &quot;X${PUBLISH_TO_BODA}&quot; = &quot;Xyes&quot; -o &quot;X${PUBLISH_TO_BODA}&quot; = &quot;XYES&quot; -o &quot;X${PUBLISH_TO_BODA}&quot; = &quot;X1&quot; ]
+then
+	cp ${WORKSPACE}/buildoutput/${RMSNG_PACKAGE_NAME} ${PUBLISH_BODA_SC_DIR}/
+	cd ${WORKSPACE}/viewer/build
+	# Rename the Viewer packages to the RMS package format
+	mv RightsManagementServer-CADViewer-${BUILD_NUMBER}.zip RightsManagementServer-CADViewer-${VERSION_RMS_STR}-${RMSNG_BUILD_NUMBER}-${BUILD_DATE_LONG}.zip
+	mv RightsManagementServer-DocViewer-${BUILD_NUMBER}.zip RightsManagementServer-DocViewer-${VERSION_RMS_STR}-${RMSNG_BUILD_NUMBER}-${BUILD_DATE_LONG}.zip
+	mv RightsManagementServer-SAPViewer-${BUILD_NUMBER}.zip RightsManagementServer-SAPViewer-${VERSION_RMS_STR}-${RMSNG_BUILD_NUMBER}-${BUILD_DATE_LONG}.zip
+	VIEWERPKGLIST=$(echo RightsManagementServer-*Viewer-*.zip)
+    cp RightsManagementServer-*Viewer-*.zip ${PUBLISH_BODA_SC_DIR}/
+	if [ -f &quot;${PUBLISH_BODA_SC_DIR}/${RMSNG_PACKAGE_NAME}&quot; ] ; then
+		# Write information to build.manifest file
+		echo &quot;[BUILD MANIFEST]   Product Name       : Secure Collaboration&quot;
+		echo &quot;[BUILD MANIFEST]   Installer Location : ${PUBLISH_BODA_SC_DIR}&quot;
+		echo &quot;[BUILD MANIFEST]   Installer Package  : ${RMSNG_PACKAGE_NAME} ${VIEWERPKGLIST}&quot;
+	fi
+fi
+) 2&gt;&amp;1 | tee $LOG_FILE
+
+# Create and publish build manifest
+${WORKSPACE}/scripts/createBuildManifest.pl $LOG_FILE &gt; $BUILD_MANIFEST_FILE || exit $?
+
+# Publish to BODA only if PUBLISH_TO_BODA environment variable is set (set in Jenkins build process)
+if [ &quot;X${PUBLISH_TO_BODA}&quot; = &quot;XYes&quot; -o &quot;X${PUBLISH_TO_BODA}&quot; = &quot;Xyes&quot; -o &quot;X${PUBLISH_TO_BODA}&quot; = &quot;XYES&quot; -o &quot;X${PUBLISH_TO_BODA}&quot; = &quot;X1&quot; ]
+then
+	cp ${BUILD_MANIFEST_FILE} ${PUBLISH_BODA_SC_ARTIFACT_DIR}/
+fi
+
+echo
+echo
+echo &quot;####################### BUILD MANIFEST CONTENTS ########################&quot;
+cat ${BUILD_MANIFEST_FILE}
+echo &quot;########################################################################&quot;
+
+################################################################################
+########################### END PUBLISH TO BODA PART ###########################
+################################################################################
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>buildoutput/RMS*.zip</artifacts>
+      <allowEmptyArchive>false</allowEmptyArchive>
+      <onlyIfSuccessful>false</onlyIfSuccessful>
+      <fingerprint>false</fingerprint>
+      <defaultExcludes>true</defaultExcludes>
+      <caseSensitive>true</caseSensitive>
+    </hudson.tasks.ArtifactArchiver>
+    <hudson.plugins.emailext.ExtendedEmailPublisher plugin="email-ext@2.57.2">
+      <recipientList>$DEFAULT_RECIPIENTS, RMS-DEV-TEAM@nextlabs.com</recipientList>
+      <configuredTriggers>
+        <hudson.plugins.emailext.plugins.trigger.AlwaysTrigger>
+          <email>
+            <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+            <body>$PROJECT_DEFAULT_CONTENT</body>
+            <recipientProviders>
+              <hudson.plugins.emailext.plugins.recipients.ListRecipientProvider/>
+            </recipientProviders>
+            <attachmentsPattern></attachmentsPattern>
+            <attachBuildLog>false</attachBuildLog>
+            <compressBuildLog>false</compressBuildLog>
+            <replyTo>$PROJECT_DEFAULT_REPLYTO</replyTo>
+            <contentType>project</contentType>
+          </email>
+        </hudson.plugins.emailext.plugins.trigger.AlwaysTrigger>
+      </configuredTriggers>
+      <contentType>default</contentType>
+      <defaultSubject>$DEFAULT_SUBJECT</defaultSubject>
+      <defaultContent>$DEFAULT_CONTENT</defaultContent>
+      <attachmentsPattern></attachmentsPattern>
+      <presendScript>$DEFAULT_PRESEND_SCRIPT</presendScript>
+      <postsendScript></postsendScript>
+      <attachBuildLog>false</attachBuildLog>
+      <compressBuildLog>false</compressBuildLog>
+      <replyTo>$DEFAULT_REPLYTO</replyTo>
+      <saveOutput>false</saveOutput>
+      <disabled>false</disabled>
+    </hudson.plugins.emailext.ExtendedEmailPublisher>
+  </publishers>
+  <buildWrappers>
+    <hudson.plugins.timestamper.TimestamperBuildWrapper plugin="timestamper@1.8.8"/>
+  </buildWrappers>
+</project>

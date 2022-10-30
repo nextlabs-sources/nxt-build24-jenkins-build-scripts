@@ -1,0 +1,367 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<hudson>
+  <disabledAdministrativeMonitors>
+    <string>jenkins.security.s2m.MasterKillSwitchWarning</string>
+    <string>hudsonHomeIsFull</string>
+    <string>hudson.diagnosis.ReverseProxySetupMonitor</string>
+  </disabledAdministrativeMonitors>
+  <version>2.157</version>
+  <installStateName>RESTART</installStateName>
+  <numExecutors>1</numExecutors>
+  <mode>NORMAL</mode>
+  <useSecurity>true</useSecurity>
+  <authorizationStrategy class="hudson.security.ProjectMatrixAuthorizationStrategy">
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Create:build-op</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Create:hudson-admin</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Delete:build-op</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Delete:hudson-admin</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.ManageDomains:build-op</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.ManageDomains:hudson-admin</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Update:build-op</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Update:hudson-admin</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.View:build-op</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.View:hudson-admin</permission>
+    <permission>hudson.model.Computer.Build:build-op</permission>
+    <permission>hudson.model.Computer.Build:hudson-admin</permission>
+    <permission>hudson.model.Computer.Configure:build-op</permission>
+    <permission>hudson.model.Computer.Configure:hudson-admin</permission>
+    <permission>hudson.model.Computer.Connect:build-op</permission>
+    <permission>hudson.model.Computer.Connect:hudson-admin</permission>
+    <permission>hudson.model.Computer.Create:build-op</permission>
+    <permission>hudson.model.Computer.Create:hudson-admin</permission>
+    <permission>hudson.model.Computer.Delete:build-op</permission>
+    <permission>hudson.model.Computer.Delete:hudson-admin</permission>
+    <permission>hudson.model.Computer.Disconnect:build-op</permission>
+    <permission>hudson.model.Computer.Disconnect:hudson-admin</permission>
+    <permission>hudson.model.Hudson.Administer:build-op</permission>
+    <permission>hudson.model.Hudson.Administer:hudson-admin</permission>
+    <permission>hudson.model.Hudson.Read:anonymous</permission>
+    <permission>hudson.model.Hudson.Read:build-op</permission>
+    <permission>hudson.model.Hudson.Read:hudson-admin</permission>
+    <permission>hudson.model.Hudson.Read:hudson-pcv</permission>
+    <permission>hudson.model.Hudson.Read:hudson-release</permission>
+    <permission>hudson.model.Item.Build:build-op</permission>
+    <permission>hudson.model.Item.Build:hudson-admin</permission>
+    <permission>hudson.model.Item.Build:hudson-pcv</permission>
+    <permission>hudson.model.Item.Build:hudson-release</permission>
+    <permission>hudson.model.Item.Cancel:build-op</permission>
+    <permission>hudson.model.Item.Cancel:hudson-admin</permission>
+    <permission>hudson.model.Item.Cancel:hudson-pcv</permission>
+    <permission>hudson.model.Item.Cancel:hudson-release</permission>
+    <permission>hudson.model.Item.Configure:build-op</permission>
+    <permission>hudson.model.Item.Configure:hudson-admin</permission>
+    <permission>hudson.model.Item.Create:build-op</permission>
+    <permission>hudson.model.Item.Create:hudson-admin</permission>
+    <permission>hudson.model.Item.Delete:build-op</permission>
+    <permission>hudson.model.Item.Delete:hudson-admin</permission>
+    <permission>hudson.model.Item.Discover:build-op</permission>
+    <permission>hudson.model.Item.Discover:hudson-admin</permission>
+    <permission>hudson.model.Item.Discover:hudson-pcv</permission>
+    <permission>hudson.model.Item.Discover:hudson-release</permission>
+    <permission>hudson.model.Item.Move:build-op</permission>
+    <permission>hudson.model.Item.Read:build-op</permission>
+    <permission>hudson.model.Item.Read:hudson-admin</permission>
+    <permission>hudson.model.Item.Read:hudson-pcv</permission>
+    <permission>hudson.model.Item.Read:hudson-release</permission>
+    <permission>hudson.model.Item.Workspace:build-op</permission>
+    <permission>hudson.model.Item.Workspace:hudson-admin</permission>
+    <permission>hudson.model.Item.Workspace:hudson-pcv</permission>
+    <permission>hudson.model.Item.Workspace:hudson-release</permission>
+    <permission>hudson.model.Run.Delete:build-op</permission>
+    <permission>hudson.model.Run.Delete:hudson-admin</permission>
+    <permission>hudson.model.Run.Replay:build-op</permission>
+    <permission>hudson.model.Run.Update:build-op</permission>
+    <permission>hudson.model.Run.Update:hudson-admin</permission>
+    <permission>hudson.model.View.Configure:build-op</permission>
+    <permission>hudson.model.View.Configure:hudson-admin</permission>
+    <permission>hudson.model.View.Create:build-op</permission>
+    <permission>hudson.model.View.Create:hudson-admin</permission>
+    <permission>hudson.model.View.Delete:build-op</permission>
+    <permission>hudson.model.View.Delete:hudson-admin</permission>
+    <permission>hudson.model.View.Read:build-op</permission>
+    <permission>hudson.model.View.Read:hudson-admin</permission>
+    <permission>hudson.model.View.Read:hudson-pcv</permission>
+    <permission>hudson.model.View.Read:hudson-release</permission>
+    <permission>hudson.scm.SCM.Tag:build-op</permission>
+    <permission>hudson.scm.SCM.Tag:hudson-admin</permission>
+  </authorizationStrategy>
+  <securityRealm class="hudson.plugins.active_directory.ActiveDirectorySecurityRealm" plugin="active-directory@2.10">
+    <startTls>true</startTls>
+    <groupLookupStrategy>AUTO</groupLookupStrategy>
+    <removeIrrelevantGroups>false</removeIrrelevantGroups>
+    <tlsConfiguration>TRUST_ALL_CERTIFICATES</tlsConfiguration>
+  </securityRealm>
+  <disableRememberMe>false</disableRememberMe>
+  <projectNamingStrategy class="jenkins.model.ProjectNamingStrategy$DefaultProjectNamingStrategy"/>
+  <workspaceDir>${ITEM_ROOTDIR}/workspace</workspaceDir>
+  <buildsDir>${ITEM_ROOTDIR}/builds</buildsDir>
+  <systemMessage>Production Jenkins server running on NXT-BUILD24</systemMessage>
+  <markupFormatter class="hudson.markup.RawHtmlMarkupFormatter" plugin="antisamy-markup-formatter@1.5">
+    <disableSyntaxHighlighting>false</disableSyntaxHighlighting>
+  </markupFormatter>
+  <jdks>
+    <jdk>
+      <name>JDK1.6.0_18</name>
+      <home>C:/P4/main_external/j2sdk/jdk1.6.0_18</home>
+      <properties/>
+    </jdk>
+    <jdk>
+      <name>JDK1.7.0_71</name>
+      <home>C:/P4/main_external/j2sdk/jdk1.7.0_71</home>
+      <properties/>
+    </jdk>
+  </jdks>
+  <viewsTabBar class="hudson.views.DefaultViewsTabBar"/>
+  <myViewsTabBar class="hudson.views.DefaultMyViewsTabBar"/>
+  <clouds/>
+  <quietPeriod>5</quietPeriod>
+  <scmCheckoutRetryCount>0</scmCheckoutRetryCount>
+  <views>
+    <hudson.model.AllView>
+      <owner class="hudson" reference="../../.."/>
+      <name>All</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+    </hudson.model.AllView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>misc</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>check_boda_dirs</string>
+        <string>source_external</string>
+        <string>source_main_external</string>
+        <string>source_proserv_buildcommon</string>
+        <string>test_email</string>
+        <string>test_pcv_Bryce_RMS_8.2_generate_metrics</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+      </columns>
+      <recurse>false</recurse>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>Bryce_8.2</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>release_RMS_8.2</string>
+        <string>release_RMS_8.2.1</string>
+        <string>release_RMS_8.2.2_MR</string>
+        <string>release_RMS_8.2.3_MR</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+      </columns>
+      <recurse>false</recurse>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>Zion_8.1.X</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator" reference="../../../listView[2]/jobNames/comparator"/>
+        <string>release_Zion_RM_8.1.1</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+      </columns>
+      <recurse>false</recurse>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>RMJavaSDK</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator" reference="../../../listView[2]/jobNames/comparator"/>
+        <string>pcv_RMJavaSDK_1.0.5</string>
+        <string>pcv_RMJavaSDK_1.0.6</string>
+        <string>pcv_RMJavaSDK_1.0.7</string>
+        <string>release_RMJavaSDK_1.0.4</string>
+        <string>release_RMJavaSDK_1.0.5</string>
+        <string>release_RMJavaSDK_1.0.6</string>
+        <string>release_RMJavaSDK_1.0.7</string>
+        <string>release_RMJavaSDK_1.0.7.1</string>
+        <string>test_RMJavaSDK_103_GitMigration</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+      </columns>
+      <recurse>false</recurse>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>Arches_8.3.X</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>pcv_Arches_RMS_8.3</string>
+        <string>pcv_Arches_UserManagement</string>
+        <string>release_Arches_RMS_8.3</string>
+        <string>release_RMS_8.3.0.1_BajajOnly</string>
+        <string>release_RMS_8.3.1</string>
+        <string>release_RMS_8.3.2_MMR</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+      </columns>
+      <recurse>false</recurse>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>Denali_9.0.X</name>
+      <description>Collection of build tasks for RMS 9.0 &apos;Denali&apos; Codebase</description>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>pcv_Denali_Main</string>
+        <string>pcv_Denali_Main_9.1</string>
+        <string>release_Denali_9.0</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+      </columns>
+      <recurse>false</recurse>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>RMSNG</name>
+      <description>Builds Jobs for SecureCollaboration</description>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>RMSNG-10.0.1_MR</string>
+        <string>RMSNG-10.2_MR</string>
+        <string>RMSNG-binaries</string>
+        <string>RMSNG-binaries-10.0.1_MR</string>
+        <string>RMSNG-binaries-10.2_MR</string>
+        <string>RMSNG-master-ci</string>
+        <string>RMSNG-master-nightly</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+      </columns>
+      <recurse>false</recurse>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>Arches_8.4.X</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>release_RMS_8.4.0_MMR</string>
+        <string>release_RMS_8.4.1_MMR</string>
+        <string>release_RMS_8.4.2_MMR</string>
+        <string>release_RMS_8.4.3_MMR</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+      </columns>
+      <recurse>false</recurse>
+    </listView>
+  </views>
+  <primaryView>RMSNG</primaryView>
+  <slaveAgentPort>0</slaveAgentPort>
+  <disabledAgentProtocols>
+    <string>JNLP-connect</string>
+    <string>JNLP2-connect</string>
+  </disabledAgentProtocols>
+  <label></label>
+  <crumbIssuer class="hudson.security.csrf.DefaultCrumbIssuer">
+    <excludeClientIPFromCrumb>false</excludeClientIPFromCrumb>
+  </crumbIssuer>
+  <nodeProperties/>
+  <globalNodeProperties>
+    <hudson.plugins.zentimestamp.ZenTimestampNodeProperty plugin="zentimestamp@4.2">
+      <pattern>yyyy-MM-dd_HH-mm-ss</pattern>
+    </hudson.plugins.zentimestamp.ZenTimestampNodeProperty>
+    <hudson.slaves.EnvironmentVariablesNodeProperty>
+      <envVars serialization="custom">
+        <unserializable-parents/>
+        <tree-map>
+          <default>
+            <comparator class="hudson.util.CaseInsensitiveComparator"/>
+          </default>
+          <int>1</int>
+          <string>HOME</string>
+          <string>C:\build-op</string>
+        </tree-map>
+      </envVars>
+    </hudson.slaves.EnvironmentVariablesNodeProperty>
+  </globalNodeProperties>
+</hudson>

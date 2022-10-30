@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.plugins.disk__usage.DiskUsageProperty plugin="disk-usage@0.28"/>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>true</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <jdk>(Default)</jdk>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>export NLEXTERNALDIR=C:/P4/external/
+export NLEXTERNALDIR2=C:/P4/main_external/
+export JAVA_HOME=${NLEXTERNALDIR2}/j2sdk/jdk1.7.0_71
+
+export PUBLISH_TO_BODA=NO
+
+cd ${WORKSPACE}
+# source ./setEnv
+# ./buildPcv
+
+echo &quot;INFO: BUILD_TIMESTAMP: ${BUILD_TIMESTAMP}&quot;
+echo &quot;INFO: BUILD_ID: ${BUILD_ID}&quot;</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>
